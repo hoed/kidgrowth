@@ -7,30 +7,30 @@ Equipped with **AI-powered insights**, dynamic growth charts, milestone tracking
 
 ## 🚀 **Features**
 
-### **📈 1. Physical Growth Tracking**
+### ** 1. Physical Growth Tracking**
 
 Track the child’s height, weight, and BMI with automatic plotting on WHO-standard growth charts.
 
-### **🧠 2. Cognitive Development**
+### ** 2. Cognitive Development**
 
 Monitor developmental progress such as language skills, memory, problem-solving, and age-based learning abilities.
 
-### **🤝 3. Social & Emotional Stages**
+### ** 3. Social & Emotional Stages**
 
 Track emotional responses, social interaction levels, confidence, self-awareness, and communication development.
 
-### **🍽️ 4. Nutrition & Immunization**
+### ** 4. Nutrition & Immunization**
 
 * AI-generated weekly meal plans
 * Calorie and nutrient recommendations
 * Immunization schedule (WHO & Indonesia standards)
 * Automatic reminders
 
-### **📅 5. Daily Habits & Activities**
+### ** 5. Daily Habits & Activities**
 
 Track sleep, feeding, screen time, water intake, mood, and daily routines.
 
-### **⚠️ 6. Risk Alerts & AI Recommendations**
+### ** 6. Risk Alerts & AI Recommendations**
 
 AI analyzes growth data, milestones, habits, and nutrition to:
 
@@ -41,7 +41,7 @@ AI analyzes growth data, milestones, habits, and nutrition to:
 
 ---
 
-## 🤖 **AI-Powered Modules**
+##  **AI-Powered Modules**
 
 ### **AI Growth Assistant**
 
@@ -57,7 +57,7 @@ Creates custom weekly meal plans considering the child's age, allergies, and pre
 
 ---
 
-## 🧩 **Additional Key Features**
+##  **Additional Key Features**
 
 * Milestone checklist with photo/video attachments
 * Multi-child profiles
@@ -69,7 +69,7 @@ Creates custom weekly meal plans considering the child's age, allergies, and pre
 
 ---
 
-## 🎨 **Design & UI**
+##  **Design & UI**
 
 KidGrowth+ uses a clean, modern, and friendly UI with:
 
@@ -81,7 +81,7 @@ KidGrowth+ uses a clean, modern, and friendly UI with:
 
 ---
 
-## 🏗️ **Tech Stack**
+##  **Tech Stack**
 
 * **Frontend:** Flutter / React Native
 * **Backend:** Firebase / Supabase
@@ -92,7 +92,7 @@ KidGrowth+ uses a clean, modern, and friendly UI with:
 
 ---
 
-## 📁 **Project Structure (Example)**
+##  **Project Structure (Example)**
 
 ```
 /lib or /src
@@ -110,7 +110,7 @@ KidGrowth+ uses a clean, modern, and friendly UI with:
 
 ---
 
-## 🔧 **Installation & Setup**
+##  **Installation & Setup**
 
 ```bash
 # Clone the repository
@@ -128,7 +128,7 @@ npm start     # or flutter run
 
 ---
 
-## 📚 **Internal AI Prompts (Included in App)**
+##  **Internal AI Prompts (Included in App)**
 
 ### **Growth Analysis Prompt**
 
@@ -144,7 +144,7 @@ npm start     # or flutter run
 
 ---
 
-## 🛡️ **Privacy & Data Security**
+##  **Privacy & Data Security**
 
 * No data is shared with third parties
 * Child data is encrypted and stored securely
@@ -152,14 +152,14 @@ npm start     # or flutter run
 
 ---
 
-## 🤝 **Contributing**
+##  **Contributing**
 
 Contributions are welcome!
 Please submit a pull request or open an issue if you'd like to improve the project.
 
 ---
 
-## 📄 **License**
+##  **License**
 
 This project is licensed under the **MIT License**.
 
