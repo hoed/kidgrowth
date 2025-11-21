@@ -1,7 +1,3 @@
-Here is a clean, professional **README.md** for GitHub, written in English and suitable for your mobile app project.
-
----
-
 # **KidGrowth+ — AI-Powered Child Growth & Development Tracker**
 
 KidGrowth+ is a modern mobile application designed to help parents track and support their child’s growth and development from **3 months to 10 years old**.
