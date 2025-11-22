@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Baby, Mail, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Heart } from 'lucide-react';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
