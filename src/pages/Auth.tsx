@@ -200,9 +200,6 @@ const Auth = () => {
           </Tabs>
         </Card>
       </motion.div>
-        <p className="text-center text-sm text-muted-foreground flex items-center justify-center gap-2">
-        Dibuat oleh Hoed dengan <Heart className="w-4 h-4 text-red-500 fill-red-500" />
-        </p>
     </div>
   );
 };
