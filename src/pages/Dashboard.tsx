@@ -105,7 +105,7 @@ const Dashboard = () => {
               <div className="p-2 bg-white rounded-full shadow-soft">
                 <Baby className="w-6 h-6 text-primary" />
               </div>
-              <h1 className="text-2xl font-bold text-white">KidGrowth+</h1>
+              <h1 className="text-2xl font-bold text-white">Anakku+</h1>
             </div>
             <div className="flex items-center gap-4">
               <ChildSelector
