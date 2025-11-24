@@ -129,7 +129,7 @@ const Auth = () => {
         backgroundPosition: 'center',
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/90 to-accent/90" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/70 to-accent/70" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
