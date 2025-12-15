@@ -33,16 +33,18 @@ const Dashboard = () => {
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (!session) {
-        navigate('/auth');
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        if (event === 'SIGNED_OUT' || !session) {
+          navigate('/auth');
+        }
       }
-    });
+    );
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (!session) {
         navigate('/auth');
@@ -84,12 +86,15 @@ const Dashboard = () => {
 
   const handleSignOut = async () => {
     try {
-      await supabase.auth.signOut({ scope: 'local' });
+      // Clear local state first
+      setSession(null);
+      setSelectedChild(null);
+      // Sign out from Supabase
+      await supabase.auth.signOut();
     } catch (error) {
-      console.log('Sign out error (session may already be invalid):', error);
+      console.log('Sign out error:', error);
     }
-    // Always clear state and redirect, even if signOut fails
-    setSession(null);
+    // Always redirect
     navigate('/auth');
   };
 
