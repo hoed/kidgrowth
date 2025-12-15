@@ -1,5 +1,3 @@
----
-
 # **Anakku+ — Pelacak Pertumbuhan & Perkembangan Anak Berbasis AI**
 
 Anakku+ adalah aplikasi mobile modern yang dirancang untuk membantu orang tua memantau dan mendukung pertumbuhan serta perkembangan anak sejak usia **3 bulan hingga 10 tahun**.
