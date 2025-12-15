@@ -107,10 +107,10 @@ Anakku+ menggunakan antarmuka yang bersih, modern, dan ramah dengan:
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/kidgrowth-app.git
+git clone https://github.com/hoed/anakku.git
 
 # Masuk ke direktori proyek
-cd kidgrowth-app
+cd anakku-main
 
 # Install dependensi
 npm install   # atau flutter pub get
