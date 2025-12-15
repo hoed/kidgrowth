@@ -1,5 +1,3 @@
-😅 siap, maaf ya. Ini **SATU markdown bersih tanpa block ```**, jadi **langsung bisa di-copy & dipakai** (README, Notion, GitHub, dsb).
-
 ---
 
 # **Anakku+ — Pelacak Pertumbuhan & Perkembangan Anak Berbasis AI**
@@ -163,13 +161,4 @@ Silakan ajukan pull request atau buka issue untuk pengembangan lebih lanjut.
 
 Proyek ini dilisensikan di bawah **Lisensi MIT**.
 
----
 
-Kalau mau:
-
-* versi **README GitHub profesional**
-* versi **proposal startup / pitch deck**
-* versi **landing page**
-* atau **disesuaikan regulasi Indonesia (Kemenkes, IDAI)**
-
-tinggal bilang.
