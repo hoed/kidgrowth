@@ -22,9 +22,9 @@ serve(async (req) => {
       throw new Error("GEMINI_API_KEY tidak dikonfigurasi");
     }
 
-    // Use gemini-1.5-flash which is stable and available
+    // Use gemini-pro which is stable via v1 API
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: {
