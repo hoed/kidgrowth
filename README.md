@@ -109,33 +109,30 @@ npm install   # atau flutter pub get
 # Jalankan aplikasi
 npm start     # atau flutter run
 
+```
 ---
-Prompt AI Internal (Termasuk di Aplikasi)
+## **Prompt AI Internal (Termasuk di Aplikasi)**
 Prompt Analisis Pertumbuhan
 
 “Analisis data pertumbuhan anak (tinggi badan, berat badan, usia) menggunakan standar WHO dan berikan insight, potensi masalah, serta rekomendasi yang dapat ditindaklanjuti.”
 
-Prompt Evaluasi Milestone
+## **Prompt Evaluasi Milestone**
 
 “Evaluasi checklist milestone ini dan tentukan apakah perkembangan anak normal, lebih cepat, atau terlambat.”
 
-Prompt Nutrisi
+## **Prompt Nutrisi**
 
 “Buatkan rencana makan mingguan untuk anak usia ___ dengan preferensi ___ dan batasan ___. Sertakan ringkasan kalori dan nutrisi.”
 
-Privasi & Keamanan Data
+## **Privasi & Keamanan Data
 
 Tidak ada data yang dibagikan ke pihak ketiga
-
 Data anak dienkripsi dan disimpan secara aman
-
 Orang tua memiliki kendali penuh atas informasi mereka
 
-Kontribusi
-
+## **Kontribusi**
 Kontribusi sangat terbuka!
 Silakan ajukan pull request atau buka issue jika Anda ingin meningkatkan proyek ini.
 
-Lisensi
-
+## **Lisensi**
 Proyek ini dilisensikan di bawah Lisensi MIT.
