@@ -1,4 +1,3 @@
-```markdown
 # **Anakku+ — Pelacak Pertumbuhan & Perkembangan Anak Berbasis AI**
 
 Anakku+ adalah aplikasi mobile modern yang dirancang untuk membantu orang tua memantau dan mendukung pertumbuhan serta perkembangan anak sejak usia **3 bulan hingga 10 tahun**.  
@@ -93,23 +92,18 @@ Anakku+ menggunakan antarmuka yang bersih, modern, dan ramah dengan:
 
 ---
 
-## **Struktur Proyek (Contoh)**
-
-```
-
+## **Struktur Proyek**
 /lib atau /src
 │── components/
 │── screens/
 │── services/
-│   ├── ai/
-│   ├── auth/
-│   ├── database/
+│ ├── ai/
+│ ├── auth/
+│ ├── database/
 │── utils/
 │── models/
 │── assets/
 │── README.md
-
-````
 
 ---
 
@@ -127,44 +121,34 @@ npm install   # atau flutter pub get
 
 # Jalankan aplikasi
 npm start     # atau flutter run
-````
 
----
 
-## **Prompt AI Internal (Termasuk di Aplikasi)**
-
-### **Prompt Analisis Pertumbuhan**
+Prompt AI Internal (Termasuk di Aplikasi)
+Prompt Analisis Pertumbuhan
 
 “Analisis data pertumbuhan anak (tinggi badan, berat badan, usia) menggunakan standar WHO dan berikan insight, potensi masalah, serta rekomendasi yang dapat ditindaklanjuti.”
 
-### **Prompt Evaluasi Milestone**
+Prompt Evaluasi Milestone
 
 “Evaluasi checklist milestone ini dan tentukan apakah perkembangan anak normal, lebih cepat, atau terlambat.”
 
-### **Prompt Nutrisi**
+Prompt Nutrisi
 
 “Buatkan rencana makan mingguan untuk anak usia ___ dengan preferensi ___ dan batasan ___. Sertakan ringkasan kalori dan nutrisi.”
 
----
+Privasi & Keamanan Data
 
-## **Privasi & Keamanan Data**
+Tidak ada data yang dibagikan ke pihak ketiga
 
-* Tidak ada data yang dibagikan ke pihak ketiga
-* Data anak dienkripsi dan disimpan secara aman
-* Orang tua memiliki kendali penuh atas informasi mereka
+Data anak dienkripsi dan disimpan secara aman
 
----
+Orang tua memiliki kendali penuh atas informasi mereka
 
-## **Kontribusi**
+Kontribusi
 
 Kontribusi sangat terbuka!
 Silakan ajukan pull request atau buka issue jika Anda ingin meningkatkan proyek ini.
 
----
+Lisensi
 
-## **Lisensi**
-
-Proyek ini dilisensikan di bawah **Lisensi MIT**.
-
-```
-```
+Proyek ini dilisensikan di bawah Lisensi MIT.
