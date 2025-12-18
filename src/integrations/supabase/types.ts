@@ -206,6 +206,47 @@ export type Database = {
           },
         ]
       }
+      meal_plans: {
+        Row: {
+          child_id: string
+          created_at: string
+          id: string
+          is_favorite: boolean
+          plan_data: Json
+          preferences: string | null
+          updated_at: string
+          week_start_date: string
+        }
+        Insert: {
+          child_id: string
+          created_at?: string
+          id?: string
+          is_favorite?: boolean
+          plan_data: Json
+          preferences?: string | null
+          updated_at?: string
+          week_start_date?: string
+        }
+        Update: {
+          child_id?: string
+          created_at?: string
+          id?: string
+          is_favorite?: boolean
+          plan_data?: Json
+          preferences?: string | null
+          updated_at?: string
+          week_start_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plans_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       milestones: {
         Row: {
           achieved_date: string | null

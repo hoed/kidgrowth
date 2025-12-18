@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -22,8 +23,14 @@ import {
   Carrot,
   Egg,
   Fish,
-  Milk
+  Milk,
+  Heart,
+  History,
+  Save,
+  Trash2
 } from 'lucide-react';
+import { format } from 'date-fns';
+import { id as localeId } from 'date-fns/locale';
 
 interface NutritionMealPlannerProps {
   childId: string;
@@ -59,6 +66,16 @@ interface MealPlan {
   tips: string[];
 }
 
+interface SavedMealPlan {
+  id: string;
+  child_id: string;
+  plan_data: MealPlan;
+  is_favorite: boolean;
+  week_start_date: string;
+  preferences: string | null;
+  created_at: string;
+}
+
 const mealIcons: Record<string, React.ReactNode> = {
   breakfast: <Sun className="w-4 h-4 text-amber-500" />,
   lunch: <Cloud className="w-4 h-4 text-blue-500" />,
@@ -80,10 +97,36 @@ const dayColors: Record<string, string> = {
 
 export const NutritionMealPlanner = ({ childId, childName, ageMonths }: NutritionMealPlannerProps) => {
   const [mealPlan, setMealPlan] = useState<MealPlan | null>(null);
+  const [currentPlanId, setCurrentPlanId] = useState<string | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [savedPlans, setSavedPlans] = useState<SavedMealPlan[]>([]);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [preferences, setPreferences] = useState('');
   const [selectedDay, setSelectedDay] = useState('Senin');
+  const [historyOpen, setHistoryOpen] = useState(false);
   const { toast } = useToast();
+
+  useEffect(() => {
+    fetchSavedPlans();
+  }, [childId]);
+
+  const fetchSavedPlans = async () => {
+    const { data, error } = await supabase
+      .from('meal_plans')
+      .select('*')
+      .eq('child_id', childId)
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      // Cast the data properly
+      const plans = data.map(item => ({
+        ...item,
+        plan_data: item.plan_data as unknown as MealPlan
+      })) as SavedMealPlan[];
+      setSavedPlans(plans);
+    }
+  };
 
   const generateMealPlan = async () => {
     setLoading(true);
@@ -103,19 +146,122 @@ export const NutritionMealPlanner = ({ childId, childName, ageMonths }: Nutritio
       }
 
       setMealPlan(data);
+      setCurrentPlanId(null);
+      setIsFavorite(false);
       toast({
         title: 'Berhasil!',
         description: 'Rencana makan mingguan telah dibuat',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error generating meal plan:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Silakan coba lagi';
       toast({
         title: 'Gagal membuat rencana makan',
-        description: error.message || 'Silakan coba lagi',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const saveMealPlan = async () => {
+    if (!mealPlan) return;
+
+    setSaving(true);
+    try {
+      const planDataJson = JSON.parse(JSON.stringify(mealPlan));
+      
+      if (currentPlanId) {
+        // Update existing
+        const { error } = await supabase
+          .from('meal_plans')
+          .update({ 
+            plan_data: planDataJson,
+            preferences,
+            is_favorite: isFavorite
+          })
+          .eq('id', currentPlanId);
+
+        if (error) throw error;
+      } else {
+        // Insert new
+        const { data, error } = await supabase
+          .from('meal_plans')
+          .insert({
+            child_id: childId,
+            plan_data: planDataJson,
+            preferences,
+            is_favorite: isFavorite,
+            week_start_date: new Date().toISOString().split('T')[0]
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        setCurrentPlanId(data.id);
+      }
+
+      await fetchSavedPlans();
+      toast({
+        title: 'Tersimpan!',
+        description: 'Rencana makan berhasil disimpan',
+      });
+    } catch (error: unknown) {
+      console.error('Error saving meal plan:', error);
+      toast({
+        title: 'Gagal menyimpan',
+        description: 'Silakan coba lagi',
+        variant: 'destructive',
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const toggleFavorite = async () => {
+    const newFavorite = !isFavorite;
+    setIsFavorite(newFavorite);
+
+    if (currentPlanId) {
+      await supabase
+        .from('meal_plans')
+        .update({ is_favorite: newFavorite })
+        .eq('id', currentPlanId);
+      await fetchSavedPlans();
+    }
+  };
+
+  const loadPlan = (plan: SavedMealPlan) => {
+    setMealPlan(plan.plan_data);
+    setCurrentPlanId(plan.id);
+    setIsFavorite(plan.is_favorite);
+    setPreferences(plan.preferences || '');
+    setHistoryOpen(false);
+    toast({
+      title: 'Rencana dimuat',
+      description: `Rencana dari ${format(new Date(plan.created_at), 'd MMM yyyy', { locale: localeId })}`,
+    });
+  };
+
+  const deletePlan = async (planId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    const { error } = await supabase
+      .from('meal_plans')
+      .delete()
+      .eq('id', planId);
+
+    if (!error) {
+      await fetchSavedPlans();
+      if (currentPlanId === planId) {
+        setMealPlan(null);
+        setCurrentPlanId(null);
+      }
+      toast({
+        title: 'Dihapus',
+        description: 'Rencana makan berhasil dihapus',
+      });
     }
   };
 
@@ -125,16 +271,118 @@ export const NutritionMealPlanner = ({ childId, childName, ageMonths }: Nutritio
   };
 
   const currentDayPlan = mealPlan?.weekPlan.find(d => d.day === selectedDay);
+  const favoritePlans = savedPlans.filter(p => p.is_favorite);
 
   return (
     <Card className="shadow-card border-0 overflow-hidden">
       <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
-        <CardTitle className="flex items-center gap-2">
-          <div className="p-2 bg-white/20 rounded-lg">
-            <Utensils className="w-5 h-5" />
-          </div>
-          Perencana Makan Mingguan
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <Utensils className="w-5 h-5" />
+            </div>
+            Perencana Makan Mingguan
+          </CardTitle>
+          <Dialog open={historyOpen} onOpenChange={setHistoryOpen}>
+            <DialogTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+                <History className="w-4 h-4 mr-1" />
+                Riwayat
+                {savedPlans.length > 0 && (
+                  <Badge variant="secondary" className="ml-1 bg-white/20">
+                    {savedPlans.length}
+                  </Badge>
+                )}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Riwayat Rencana Makan</DialogTitle>
+              </DialogHeader>
+              <ScrollArea className="max-h-[400px]">
+                {savedPlans.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <History className="w-10 h-10 mx-auto mb-2 opacity-50" />
+                    <p className="text-sm">Belum ada rencana tersimpan</p>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {favoritePlans.length > 0 && (
+                      <>
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-1">
+                          Favorit
+                        </p>
+                        {favoritePlans.map(plan => (
+                          <div
+                            key={plan.id}
+                            onClick={() => loadPlan(plan)}
+                            className="p-3 rounded-lg border bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800 cursor-pointer hover:shadow-md transition-shadow"
+                          >
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <Heart className="w-4 h-4 text-amber-500 fill-amber-500" />
+                                  <span className="font-medium text-sm">
+                                    {format(new Date(plan.created_at), 'd MMM yyyy', { locale: localeId })}
+                                  </span>
+                                </div>
+                                {plan.preferences && (
+                                  <p className="text-xs text-muted-foreground mt-1 truncate max-w-[200px]">
+                                    {plan.preferences}
+                                  </p>
+                                )}
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 text-destructive hover:text-destructive"
+                                onClick={(e) => deletePlan(plan.id, e)}
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                        <div className="border-t my-3" />
+                      </>
+                    )}
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-1">
+                      Semua Rencana
+                    </p>
+                    {savedPlans.filter(p => !p.is_favorite).map(plan => (
+                      <div
+                        key={plan.id}
+                        onClick={() => loadPlan(plan)}
+                        className="p-3 rounded-lg border cursor-pointer hover:bg-muted/50 hover:shadow-md transition-all"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <span className="font-medium text-sm">
+                              {format(new Date(plan.created_at), 'd MMM yyyy', { locale: localeId })}
+                            </span>
+                            {plan.preferences && (
+                              <p className="text-xs text-muted-foreground mt-1 truncate max-w-[200px]">
+                                {plan.preferences}
+                              </p>
+                            )}
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-destructive hover:text-destructive"
+                            onClick={(e) => deletePlan(plan.id, e)}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+            </DialogContent>
+          </Dialog>
+        </div>
       </CardHeader>
       <CardContent className="p-4 space-y-4">
         {/* Input Section */}
@@ -151,28 +399,56 @@ export const NutritionMealPlanner = ({ childId, childName, ageMonths }: Nutritio
               className="mt-1"
             />
           </div>
-          <Button
-            onClick={generateMealPlan}
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-          >
-            {loading ? (
+          <div className="flex gap-2">
+            <Button
+              onClick={generateMealPlan}
+              disabled={loading}
+              className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Membuat...
+                </>
+              ) : mealPlan ? (
+                <>
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Buat Ulang
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Buat Rencana AI
+                </>
+              )}
+            </Button>
+            {mealPlan && (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Membuat Rencana...
-              </>
-            ) : mealPlan ? (
-              <>
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Buat Ulang Rencana
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 mr-2" />
-                Buat Rencana Makan AI
+                <Button
+                  onClick={toggleFavorite}
+                  variant="outline"
+                  size="icon"
+                  className={isFavorite ? 'text-amber-500 border-amber-500' : ''}
+                >
+                  <Heart className={`w-4 h-4 ${isFavorite ? 'fill-amber-500' : ''}`} />
+                </Button>
+                <Button
+                  onClick={saveMealPlan}
+                  variant="outline"
+                  disabled={saving}
+                >
+                  {saving ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-1" />
+                      Simpan
+                    </>
+                  )}
+                </Button>
               </>
             )}
-          </Button>
+          </div>
         </div>
 
         {/* Meal Plan Display */}
@@ -187,7 +463,7 @@ export const NutritionMealPlanner = ({ childId, childName, ageMonths }: Nutritio
               {/* Day Selector */}
               <div className="flex items-center gap-2 overflow-x-auto pb-2">
                 <Calendar className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                {mealPlan.weekPlan.map((day, index) => (
+                {mealPlan.weekPlan.map((day) => (
                   <Button
                     key={day.day}
                     variant={selectedDay === day.day ? 'default' : 'outline'}
