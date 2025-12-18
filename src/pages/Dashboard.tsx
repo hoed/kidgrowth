@@ -17,6 +17,7 @@ import { ShareLinkManager } from '@/components/ShareLinkManager';
 import { GoogleCalendar } from '@/components/GoogleCalendar';
 import { ImmunizationManager } from '@/components/ImmunizationManager';
 import { PhotoDevelopment } from '@/components/PhotoDevelopment';
+import { NutritionMealPlanner } from '@/components/NutritionMealPlanner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 
@@ -231,6 +232,13 @@ const Dashboard = () => {
 
             {/* Immunization Manager */}
             <ImmunizationManager childId={selectedChild.id} childName={selectedChild.name} />
+
+            {/* Nutrition Meal Planner */}
+            <NutritionMealPlanner 
+              childId={selectedChild.id} 
+              childName={selectedChild.name}
+              ageMonths={calculateAge(selectedChild.date_of_birth)}
+            />
 
             {/* Disease Detection */}
             <DiseaseDetection />
